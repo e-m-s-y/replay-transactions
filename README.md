@@ -54,4 +54,4 @@ Plugin uses transaction pool configuration to automatically chunk the transactio
 
 ## License
 
-[MIT](LICENSE.md)
+[CC BY-ND 4.0](LICENSE.md)
