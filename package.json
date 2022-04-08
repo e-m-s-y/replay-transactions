@@ -1,0 +1,22 @@
+{
+    "name": "@foly/replay-transactions",
+    "version": "1.0.0",
+    "description": "A plugin for replaying transfer transactions from one chain to another",
+    "license": "CC BY-ND 4.0",
+    "contributors": [
+        "emsy <https://github.com/e-m-s-y>"
+    ],
+    "files": [
+        "dist/*.js"
+    ],
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "pnpm clean && pnpm compile",
+        "clean": "rimraf dist",
+        "compile": "../../node_modules/typescript/bin/tsc"
+    },
+    "devDependencies": {
+        "@solar-network/crypto": "workspace:*",
+        "@solar-network/core-kernel": "workspace:*"
+    }
+}
