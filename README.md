@@ -53,5 +53,4 @@ Plugin uses transaction pool configuration to automatically chunk the transactio
 - [e-m-s-y](https://github.com/e-m-s-y)
 
 ## License
-
 [CC BY-ND 4.0](LICENSE.md)
