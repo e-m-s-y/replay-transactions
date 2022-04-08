@@ -1,5 +1,5 @@
-import { Container, Contracts, Providers, Utils } from "@solar-network/core-kernel";
-import { Enums, Identities, Interfaces, Transactions } from "@solar-network/crypto";
+import { Container, Contracts, Providers, Utils } from "@arkecosystem/core-kernel";
+import { Enums, Identities, Interfaces, Transactions } from "@arkecosystem/crypto";
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 
@@ -17,7 +17,7 @@ export default class Service {
     private readonly processor!: Contracts.TransactionPool.Processor;
 
     @Container.inject(Container.Identifiers.PluginConfiguration)
-    @Container.tagged("plugin", "@solar-network/core-transaction-pool")
+    @Container.tagged("plugin", "@arkecosystem/core-transaction-pool")
     private readonly transactionPoolConfiguration!: Providers.PluginConfiguration;
 
     @Container.inject(Container.Identifiers.WalletRepository)
@@ -117,7 +117,7 @@ export default class Service {
                     senderId: batch.senderIdChild,
                     page,
                     limit: options.pageLimit,
-                    type: Enums.CoreTransactionType.Transfer,
+                    type: Enums.TransactionType.Transfer,
                     typeGroup: Enums.TransactionTypeGroup.Core,
                 },
                 options.query,
@@ -133,7 +133,7 @@ export default class Service {
         const data = Utils.merge(
             {
                 senderId: batch.senderIdChild,
-                type: Enums.CoreTransactionType.Transfer,
+                type: Enums.TransactionType.Transfer,
                 typeGroup: Enums.TransactionTypeGroup.Core,
             },
             options.query,

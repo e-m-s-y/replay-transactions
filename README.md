@@ -1,16 +1,16 @@
 # Replay transactions
-This plugin helps you replaying transactions easily from one chain to another.  
+This plugin helps you replaying transactions easily from one chain to another.
 
 Currently only transfer transactions are supported.
 
 ## Installation
 Use these steps if you installed your node using Git clone.
 
-1. Go to the plugin directory `cd ~/solar-core/plugins`.
-2. Clone the plugin `git clone https://github.com/e-m-s-y/replay-transactions -b solar`.
-3. Install and build the plugin `cd replay-transactions && pnpm install && pnpm build`.
+1. Go to the plugin directory `cd ~/ark-core/plugins`.
+2. Clone the plugin `git clone https://github.com/e-m-s-y/replay-transactions`.
+3. Install and build the plugin `cd replay-transactions && yarn install && yarn build`.
 4. Customize the plugin configuration to your needs.
-5. Add the configuration to `~/.config/solar-core/{mainnet|testnet}/app.json` at the bottom of relay.plugins and / or core.plugins.
+5. Add the configuration to `~/.config/ark-core/{mainnet|testnet}/app.json` at the bottom of relay.plugins and / or core.plugins.
 6. Restart your relay and / or core process(es).
 
 Note: plugin starts immediately after the blockchain has initialized.
@@ -44,7 +44,7 @@ query - query parameters used to search for transactions, check Query interface 
 pageLimit - pagination limit of the API (default 100)
 coreVersionChild - core version of the API (2 or 3)
 batches - array with senderId used for searching API plus a mnemonic of the new senderId on new chain
-``` 
+```
 
 Plugin uses transaction pool configuration to automatically chunk the transactions, default chunk size is 150.
 

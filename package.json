@@ -11,12 +11,15 @@
     ],
     "main": "dist/index.js",
     "scripts": {
-        "build": "pnpm clean && pnpm compile",
+        "build": "yarn clean && yarn compile",
         "clean": "rimraf dist",
         "compile": "../../node_modules/typescript/bin/tsc"
     },
+    "dependencies": {
+        "axios": "^0.26.1"
+    },
     "devDependencies": {
-        "@solar-network/crypto": "workspace:*",
-        "@solar-network/core-kernel": "workspace:*"
+        "@arkecosystem/crypto": "^3.2.0",
+        "@arkecosystem/core-kernel": "^3.2.0"
     }
 }
