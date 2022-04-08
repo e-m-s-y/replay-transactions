@@ -15,6 +15,9 @@
         "clean": "rimraf dist",
         "compile": "../../node_modules/typescript/bin/tsc"
     },
+    "dependencies": {
+        "axios": "^0.26.1"
+    },
     "devDependencies": {
         "@solar-network/crypto": "workspace:*",
         "@solar-network/core-kernel": "workspace:*"
