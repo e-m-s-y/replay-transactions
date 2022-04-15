@@ -8,7 +8,6 @@ import { Batch, Options } from "./interfaces";
 @Container.injectable()
 export default class Service {
     public static readonly ID = "@foly/replay-transactions";
-    public static readonly CACHE = new Map();
 
     @Container.inject(Container.Identifiers.LogService)
     private readonly logger!: Contracts.Kernel.Logger;
