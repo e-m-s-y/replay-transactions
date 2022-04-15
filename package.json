@@ -1,7 +1,7 @@
 {
-    "name": "@foly/replay-transactions",
+    "name": "@foly/replay-game-transactions",
     "version": "1.0.0",
-    "description": "A plugin for replaying transfer transactions from one chain to another",
+    "description": "A plugin for replaying Friends of little Yus game transactions from one chain to Solar bridgechains",
     "license": "CC BY-ND 4.0",
     "contributors": [
         "emsy <https://github.com/e-m-s-y>"
@@ -19,6 +19,7 @@
         "axios": "^0.26.1"
     },
     "devDependencies": {
+        "@foly/helios-crypto": "workspace:*",
         "@solar-network/crypto": "workspace:*",
         "@solar-network/core-kernel": "workspace:*"
     }

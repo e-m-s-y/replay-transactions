@@ -1,14 +1,12 @@
-# Replay transactions
-This plugin helps you replaying transactions easily from one chain to another.  
-
-Currently only transfer transactions are supported.
+# Replay game transactions
+This plugin replays Friends of little Yus game transactions from one chain to Solar bridgechains.
 
 ## Installation
 Use these steps if you installed your node using Git clone.
 
 1. Go to the plugin directory `cd ~/solar-core/plugins`.
-2. Clone the plugin `git clone https://github.com/e-m-s-y/replay-transactions -b solar`.
-3. Install and build the plugin `cd replay-transactions && pnpm install && pnpm build`.
+2. Clone the plugin `git clone https://github.com/e-m-s-y/replay-transactions -b solar-replay-game-transactions replay-game-transactions`.
+3. Install and build the plugin `cd replay-game-transactions && pnpm install && pnpm build`.
 4. Customize the plugin configuration to your needs.
 5. Add the configuration to `~/.config/solar-core/{mainnet|testnet}/app.json` at the bottom of relay.plugins and / or core.plugins.
 6. Restart your relay and / or core process(es).
@@ -18,7 +16,7 @@ Note: plugin starts immediately after the blockchain has initialized.
 #### Plugin configuration example
 ```js
 {
-    "package": "@foly/replay-transactions",
+    "package": "@foly/replay-game-transactions",
         "options": {
         "enabled": true,
             "url": "https://api.radians.nl/api/v2/transactions/search",

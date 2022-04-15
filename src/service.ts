@@ -1,5 +1,6 @@
+import { Builders, Enums } from "@foly/helios-crypto";
 import { Container, Contracts, Providers, Utils } from "@solar-network/core-kernel";
-import { Enums, Identities, Interfaces, Transactions } from "@solar-network/crypto";
+import { Identities, Interfaces } from "@solar-network/crypto";
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 
@@ -7,7 +8,7 @@ import { Batch, Options } from "./interfaces";
 
 @Container.injectable()
 export default class Service {
-    public static readonly ID = "@foly/replay-transactions";
+    public static readonly ID = "@foly/replay-game-transactions";
 
     @Container.inject(Container.Identifiers.LogService)
     private readonly logger!: Contracts.Kernel.Logger;
@@ -97,7 +98,9 @@ export default class Service {
         return await axios.request(config).then(async (response) => {
             if (response && response.data && response.data.data && response.data.data.length) {
                 for (const transaction of response.data.data) {
-                    data.set(transaction.recipient, transaction);
+                    if (transaction.asset && transaction.asset.character) {
+                        data.set(transaction.recipient, transaction.asset.character);
+                    }
                 }
 
                 if (response.data.meta && response.data.meta.pageCount > page) {
@@ -116,8 +119,8 @@ export default class Service {
                     senderId: batch.senderIdChild,
                     page,
                     limit: options.pageLimit,
-                    type: Enums.CoreTransactionType.Transfer,
-                    typeGroup: Enums.TransactionTypeGroup.Core,
+                    type: Enums.TransactionType.CharacterRegistration,
+                    typeGroup: Enums.TransactionTypeGroup.Helios,
                 },
                 options.query,
             );
@@ -132,8 +135,8 @@ export default class Service {
         const data = Utils.merge(
             {
                 senderId: batch.senderIdChild,
-                type: Enums.CoreTransactionType.Transfer,
-                typeGroup: Enums.TransactionTypeGroup.Core,
+                type: Enums.TransactionType.CharacterRegistration,
+                typeGroup: Enums.TransactionTypeGroup.Helios,
             },
             options.query,
         );
@@ -182,19 +185,34 @@ export default class Service {
         );
         const replayTransactions: Array<Interfaces.ITransactionData> = [];
 
-        transactions.forEach((data: Interfaces.ITransactionData, recipient: string) => {
-            const transaction = Transactions.BuilderFactory.transfer()
+        transactions.forEach((character, recipient) => {
+            const loginTransaction = Builders.BuilderFactory.authentication()
                 .version(2)
                 .recipientId(recipient)
-                .amount(data.amount.toString())
-                .nonce((nonce = nonce.plus(1)).toString());
+                .nonce((nonce = nonce.plus(1)).toString())
+                .setLoggedIn(true)
+                .sign(batch.mnemonicParent);
 
-            if (data.vendorField) {
-                transaction.vendorField(data.vendorField);
-            }
+            replayTransactions.push(loginTransaction.getStruct());
 
-            transaction.sign(batch.mnemonicParent);
-            replayTransactions.push(transaction.getStruct());
+            const characterRegistrationTransaction = Builders.BuilderFactory.characterRegistration()
+                .version(2)
+                .recipientId(recipient)
+                .nonce((nonce = nonce.plus(1)).toString())
+                .name(character.name)
+                .classId(character.classId)
+                .sign(batch.mnemonicParent);
+
+            replayTransactions.push(characterRegistrationTransaction.getStruct());
+
+            const logoutTransaction = Builders.BuilderFactory.authentication()
+                .version(2)
+                .recipientId(recipient)
+                .nonce((nonce = nonce.plus(1)).toString())
+                .setLoggedIn(false)
+                .sign(batch.mnemonicParent);
+
+            replayTransactions.push(logoutTransaction.getStruct());
         });
 
         return replayTransactions;
