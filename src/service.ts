@@ -75,6 +75,7 @@ export default class Service {
         };
 
         this.emitter.listen("block.applied", eventListener);
+        this.logger.info("All set, waiting for the next block to be forged...");
     }
 
     private async createBatches(options: Options): Promise<Array<any>> {
@@ -162,13 +163,13 @@ export default class Service {
 
         this.logger.info(`[${Service.ID}] Created ${replayTransactions.length} replay transactions`);
 
-        const maxTransactionsPerSender: number =
-            this.transactionPoolConfiguration.getRequired<number>("maxTransactionsPerSender");
+        const maxTransactionsPerChunk: number =
+            this.transactionPoolConfiguration.getRequired<number>("maxTransactionsPerRequest");
 
-        const chunks: Array<any> = this.chunkify([...replayTransactions], maxTransactionsPerSender);
+        const chunks: Array<any> = this.chunkify([...replayTransactions], maxTransactionsPerChunk);
 
         this.logger.info(
-            `[${Service.ID}] Created ${chunks.length} chunks with max ${maxTransactionsPerSender} transactions per chunk for ${batch.senderIdChild}`,
+            `[${Service.ID}] Created ${chunks.length} chunks with max ${maxTransactionsPerChunk} transactions per chunk for ${batch.senderIdChild}`,
         );
 
         return chunks;

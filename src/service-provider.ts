@@ -15,9 +15,7 @@ export class ServiceProvider extends Providers.ServiceProvider {
     }
 
     public async boot(): Promise<void> {
-        const logger = this.app.get<Contracts.Kernel.Logger>(Container.Identifiers.LogService);
-
-        logger.info(`[${Service.ID}] Booting plugin...`);
+        this.logger.info(`[${Service.ID}] Booting plugin...`);
 
         const options = this.config().all() as unknown as Options;
 
