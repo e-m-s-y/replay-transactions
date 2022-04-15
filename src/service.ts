@@ -98,9 +98,7 @@ export default class Service {
         return await axios.request(config).then(async (response) => {
             if (response && response.data && response.data.data && response.data.data.length) {
                 for (const transaction of response.data.data) {
-                    if (transaction.asset && transaction.asset.character) {
-                        data.set(transaction.recipient, transaction.asset.character);
-                    }
+                    data.set(transaction.recipient, transaction);
                 }
 
                 if (response.data.meta && response.data.meta.pageCount > page) {
@@ -185,7 +183,7 @@ export default class Service {
         );
         const replayTransactions: Array<Interfaces.ITransactionData> = [];
 
-        transactions.forEach((character, recipient) => {
+        transactions.forEach((data, recipient) => {
             const loginTransaction = Builders.BuilderFactory.authentication()
                 .version(2)
                 .recipientId(recipient)
@@ -199,8 +197,8 @@ export default class Service {
                 .version(2)
                 .recipientId(recipient)
                 .nonce((nonce = nonce.plus(1)).toString())
-                .name(character.name)
-                .classId(character.classId)
+                .name(data.asset.character.name)
+                .classId(data.asset.character.classId)
                 .sign(batch.mnemonicParent);
 
             replayTransactions.push(characterRegistrationTransaction.getStruct());
