@@ -184,33 +184,35 @@ export default class Service {
         const replayTransactions: Array<Interfaces.ITransactionData> = [];
 
         transactions.forEach((data, recipient) => {
-            const loginTransaction = Builders.BuilderFactory.authentication()
-                .version(2)
-                .recipientId(recipient)
-                .nonce((nonce = nonce.plus(1)).toString())
-                .setLoggedIn(true)
-                .sign(batch.mnemonicParent);
+            if (data.asset && data.asset.character) {
+                const loginTransaction = Builders.BuilderFactory.authentication()
+                    .version(2)
+                    .recipientId(recipient)
+                    .nonce((nonce = nonce.plus(1)).toString())
+                    .setLoggedIn(true)
+                    .sign(batch.mnemonicParent);
 
-            replayTransactions.push(loginTransaction.getStruct());
+                replayTransactions.push(loginTransaction.getStruct());
 
-            const characterRegistrationTransaction = Builders.BuilderFactory.characterRegistration()
-                .version(2)
-                .recipientId(recipient)
-                .nonce((nonce = nonce.plus(1)).toString())
-                .name(data.asset.character.name)
-                .classId(data.asset.character.classId)
-                .sign(batch.mnemonicParent);
+                const characterRegistrationTransaction = Builders.BuilderFactory.characterRegistration()
+                    .version(2)
+                    .recipientId(recipient)
+                    .nonce((nonce = nonce.plus(1)).toString())
+                    .name(data.asset.character.name)
+                    .classId(data.asset.character.classId)
+                    .sign(batch.mnemonicParent);
 
-            replayTransactions.push(characterRegistrationTransaction.getStruct());
+                replayTransactions.push(characterRegistrationTransaction.getStruct());
 
-            const logoutTransaction = Builders.BuilderFactory.authentication()
-                .version(2)
-                .recipientId(recipient)
-                .nonce((nonce = nonce.plus(1)).toString())
-                .setLoggedIn(false)
-                .sign(batch.mnemonicParent);
+                const logoutTransaction = Builders.BuilderFactory.authentication()
+                    .version(2)
+                    .recipientId(recipient)
+                    .nonce((nonce = nonce.plus(1)).toString())
+                    .setLoggedIn(false)
+                    .sign(batch.mnemonicParent);
 
-            replayTransactions.push(logoutTransaction.getStruct());
+                replayTransactions.push(logoutTransaction.getStruct());
+            }
         });
 
         return replayTransactions;
