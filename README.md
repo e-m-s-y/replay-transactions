@@ -34,9 +34,7 @@ Note: plugin starts immediately after the blockchain has initialized.
     }
 }
 ```
-
-## Usage
-
+#### Configuration options
 ```
 enabled - flag to turn the plugin on or off
 url - full URL of API endpoint, used for reading transactions
@@ -54,4 +52,4 @@ Plugin uses transaction pool configuration to automatically chunk the transactio
 
 ## License
 
-[MIT](LICENSE.md)
+[LICENSE](LICENSE.md)
