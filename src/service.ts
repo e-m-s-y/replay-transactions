@@ -34,13 +34,13 @@ export default class Service {
 
         this.logger.info(`[${Service.ID}] Preparing ${options.batches.length} batches...`);
 
-        const batches: Array<any> = await this.createBatches(options);
+        let batches: Array<any> = [];
         let currentBatchIndex = 0;
         let currentChunkIndex = 0;
         let totalTransactionsCount = 0;
         let acceptedTransactionsCount = 0;
         let rejectedTransactionsCount = 0;
-        const eventListener = {
+        const chunkProcessorHandler = {
             handle: async (payload: any) => {
                 const chunks: Array<any> = batches[currentBatchIndex] ?? [];
 
@@ -61,8 +61,8 @@ export default class Service {
                         this.logger.info(
                             `[${Service.ID}] Could not process chunk, the processor rejected transactions`,
                         );
-                        this.logger.info(`[${Service.ID}] Aborting processing...`);
-                        this.emitter.forget("block.applied", eventListener);
+                        this.logger.info(`[${Service.ID}] Aborting...`);
+                        this.emitter.forget("block.applied", chunkProcessorHandler);
 
                         return;
                     }
@@ -79,13 +79,23 @@ export default class Service {
                     );
                     this.logger.info(`[${Service.ID}] Processor accepted ${acceptedTransactionsCount} transactions`);
                     this.logger.info(`[${Service.ID}] Processor rejected ${rejectedTransactionsCount} transactions`);
-                    this.emitter.forget("block.applied", eventListener);
+                    this.emitter.forget("block.applied", chunkProcessorHandler);
                 }
             },
         };
 
-        this.emitter.listen("block.applied", eventListener);
-        this.logger.info(`[${Service.ID}] All set, waiting for the next block to be forged...`);
+        const createBatchesHandler = {
+            handle: async (payload: any) => {
+                batches = await this.createBatches(options);
+
+                this.emitter.forget("block.applied", createBatchesHandler);
+                this.emitter.listen("block.applied", chunkProcessorHandler);
+                this.logger.info(
+                    `[${Service.ID}] Batches are ready, waiting for the next block to be forged to start processing transactions...`,
+                );
+            },
+        };
+        this.emitter.listen("block.applied", createBatchesHandler);
     }
 
     private async createBatches(options: Options): Promise<Array<any>> {
