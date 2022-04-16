@@ -57,6 +57,16 @@ export default class Service {
                     acceptedTransactionsCount += result.accept.length;
                     rejectedTransactionsCount += result.invalid.length;
 
+                    if (rejectedTransactionsCount > 0) {
+                        this.logger.info(
+                            `[${Service.ID}] Could not process chunk, the processor rejected transactions`,
+                        );
+                        this.logger.info(`[${Service.ID}] Aborting processing...`);
+                        this.emitter.forget("block.applied", eventListener);
+
+                        return;
+                    }
+
                     if (!(++currentChunkIndex in chunks)) {
                         currentChunkIndex = 0;
                         ++currentBatchIndex;
@@ -75,7 +85,7 @@ export default class Service {
         };
 
         this.emitter.listen("block.applied", eventListener);
-        this.logger.info("All set, waiting for the next block to be forged...");
+        this.logger.info(`[${Service.ID}] All set, waiting for the next block to be forged...`);
     }
 
     private async createBatches(options: Options): Promise<Array<any>> {
