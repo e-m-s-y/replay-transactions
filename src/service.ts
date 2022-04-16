@@ -96,6 +96,7 @@ export default class Service {
             },
         };
         this.emitter.listen("block.applied", createBatchesHandler);
+        this.logger.info(`[${Service.ID}] Waiting for the next block to be forged...`);
     }
 
     private async createBatches(options: Options): Promise<Array<any>> {
