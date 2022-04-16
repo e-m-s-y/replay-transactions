@@ -11,11 +11,16 @@ export class ServiceProvider extends Providers.ServiceProvider {
 
     public async register(): Promise<void> {
         this.app.bind(this.service).to(Service).inSingletonScope();
-        this.logger.info(`[${Service.ID}] Plugin registered, waiting to boot...`);
+
+        const logger = this.app.get<Contracts.Kernel.Logger>(Container.Identifiers.LogService);
+
+        logger.info(`[${Service.ID}] Plugin registered, waiting to boot...`);
     }
 
     public async boot(): Promise<void> {
-        this.logger.info(`[${Service.ID}] Booting plugin...`);
+        const logger = this.app.get<Contracts.Kernel.Logger>(Container.Identifiers.LogService);
+
+        logger.info(`[${Service.ID}] Booting plugin...`);
 
         const options = this.config().all() as unknown as Options;
 
@@ -24,9 +29,5 @@ export class ServiceProvider extends Providers.ServiceProvider {
 
     public async bootWhen(): Promise<boolean> {
         return !!this.config().get("enabled");
-    }
-
-    public async dispose(): Promise<void> {
-        this.logger.info(`[${Service.ID}] Plugin disposed`);
     }
 }
