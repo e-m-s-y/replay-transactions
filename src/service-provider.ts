@@ -4,9 +4,6 @@ import { Options } from "./interfaces";
 import Service from "./service";
 
 export class ServiceProvider extends Providers.ServiceProvider {
-    @Container.inject(Container.Identifiers.LogService)
-    private readonly logger!: Contracts.Kernel.Logger;
-
     private service = Service.ID;
 
     public async register(): Promise<void> {
