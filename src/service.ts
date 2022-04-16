@@ -32,8 +32,6 @@ export default class Service {
             return this.logger.info(`[${Service.ID}] Batches are empty.`);
         }
 
-        this.logger.info(`[${Service.ID}] Preparing ${options.batches.length} batches...`);
-
         let batches: Array<any> = [];
         let currentBatchIndex = 0;
         let currentChunkIndex = 0;
@@ -86,6 +84,8 @@ export default class Service {
 
         const createBatchesHandler = {
             handle: async (payload: any) => {
+                this.logger.info(`[${Service.ID}] Preparing ${options.batches.length} batches...`);
+
                 batches = await this.createBatches(options);
 
                 this.emitter.forget("block.applied", createBatchesHandler);
